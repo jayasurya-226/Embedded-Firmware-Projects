@@ -1,0 +1,119 @@
+LED Train Pattern ? Documentation (TXT Content)
+Name : B.JAYASURYA
+ROll : 167
+DATE : 24/11/2025
+Project Name: LED Train Pattern using PIC
+Microcontroller: PIC18F4580
+Port Used: PORTB (8 LEDs)
+
+1. Introduction
+
+This project implements a Train LED Pattern where LEDs turn ON one-by-one (Exit Mode) and then turn OFF one-by-one (Entry Mode).
+The pattern moves Left ? Right and Right ? Left alternately.
+
+A non-blocking software timer is used instead of __delay_ms().
+This ensures the microcontroller keeps running the loop without stopping.
+
+2. Working Principle
+Modes
+
+There are two modes:
+
+Exit Mode (mode = 0)
+LED train moves ON one-by-one.
+
+Entry Mode (mode = 1)
+LED train turns OFF one-by-one.
+
+Direction
+
+direction = 0 ? Left ? Right
+
+direction = 1 ? Right ? Left
+
+Direction automatically toggles after every full cycle.
+
+3. Software Timer (Non-Blocking Delay)
+
+Instead of blocking the CPU, we increment a variable:
+
+if(timer < 50000)
+{
+    timer++;   
+    continue;  
+}
+timer = 0;
+
+
+This behaves like a 1-second delay (approx).
+
+4. LED Movement Logic
+Exit Mode (mode = 0)
+
+LEDs turn ON one-by-one.
+
+Left ? Right
+
+PORTB = (PORTB << 1) | 0x01;
+
+
+Right ? Left
+
+PORTB = (PORTB >> 1) | 0x80;
+
+
+After 8 steps, Entry mode starts.
+
+Entry Mode (mode = 1)
+
+LEDs turn OFF one-by-one.
+
+Left ? Right
+
+PORTB = PORTB >> 1;
+
+
+Right ? Left
+
+PORTB = PORTB << 1;
+
+
+After 8 steps:
+
+Direction flips
+
+Exit mode restarts
+
+PORTB resets to 0x00
+
+5. Flow Summary
+
+Start with Exit Mode.
+
+Turn on LEDs from one side.
+
+After full ON cycle ? Entry Mode.
+
+Turn off LEDs from same direction.
+
+After OFF cycle ? reverse direction.
+
+Repeat forever.
+
+6. Applications
+
+Running LED displays
+
+Railway crossing indicators
+
+Animation effects on embedded boards
+
+Sequential signal systems
+
+7. Conclusion
+
+This project demonstrates:
+
+Non-blocking delays
+
+Bit-shifting for LED patterns
