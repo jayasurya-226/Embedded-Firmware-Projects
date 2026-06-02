@@ -1,0 +1,182 @@
+/*
+PROJECT DOCUMENTATION
+
+                  ASSIGNMENT 2 -> LED Pattern Generator using Digital Keypad Input
+ 
+NAME: B.JAYASURYA
+ROLL : 167
+Date: 30 November 2025
+
+DESCRIPTION
+
+This project implements an LED pattern generator using PORTB of a PIC microcontroller.
+The user can select one of four LED patterns using a Digital Keypad.
+Each key press loads a pattern, and PORTB displays the selected pattern continuously until another key is pressed.
+
+The program uses software delay counters to control pattern speed and uses keypad state-change detection for clean input handling.
+Each LED pattern is implemented in a separate function for modularity.
+
+FEATURES
+
+Keypad-based Pattern Selection
+Switch1 loads Pattern 1
+Switch2 loads Pattern 2
+Switch3 loads Pattern 3
+Switch4 loads Pattern 4
+
+Four Distinct LED Patterns
+Pattern 1: Forward and reverse shifting with bit build-up
+Pattern 2: Forward shift and wipe
+Pattern 3: Alternating 0xAA and 0x55
+Pattern 4: Alternating upper nibble and lower nibble
+
+Clean Key Detection
+Uses STATE_CHANGE detection to avoid repeated triggers
+Ensures one output per press
+
+Modular Design
+Each pattern is implemented in a separate function
+Initialization is handled by init_config
+
+Safe Digital Configuration
+ADC ports disabled
+PORTB configured as output
+PORTC lower nibble used for keypad input
+
+VARIABLES
+int delay
+
+Software delay counter used to control LED pattern switching speed.
+
+int i
+
+Step counter used to determine which part of the pattern sequence is running.
+
+unsigned char key
+
+Stores detected key value from the digital keypad.
+
+int flag
+
+Holds the number representing the selected pattern.
+
+FILES USED
+
+main.h
+Contains ON and OFF macro definitions.
+
+DK.h
+Contains keypad macros, keypad pin configuration, and function prototypes.
+
+main.c
+Contains pattern functions, keypad handling, and main control loop.
+
+FUNCTION DOCUMENTATION
+
+Function: init_config
+
+Initializes all modules required for LED pattern operation.
+
+Steps:
+
+Configure ADCON1 to make pins digital.
+
+Set PORTB as output.
+
+Clear PORTB.
+
+Initialize digital keypad.
+
+Function: pattern1
+
+Implements a 32-step LED animation pattern on PORTB.
+
+Sequence:
+
+Turn on bits from LSB to MSB.
+
+Shift bits left.
+
+Turn on bits in reverse direction.
+
+Shift bits right.
+
+Reset after completing 32 steps.
+
+Delay is handled using a decreasing counter.
+
+Function: pattern2
+
+Implements a 16-step LED animation.
+
+Sequence:
+
+Turn on bits from LSB to MSB.
+
+Shift bits left.
+
+Reset after 16 steps.
+
+Function: pattern3
+
+Implements a flashing alternating bit pattern.
+
+Sequence:
+
+Load 0xAA (10101010)
+
+Load 0x55 (01010101)
+
+Toggle between them after each delay cycle.
+
+Function: pattern4
+
+Implements nibble-based flashing pattern.
+
+Sequence:
+
+Load 0xF0 (11110000)
+
+Load 0x0F (00001111)
+
+Toggle between these two patterns.
+
+Function: main
+
+Serves as the core control loop for the system.
+
+Steps:
+
+Initialize system configuration.
+
+Continuously read keypad input using state-change mode.
+
+Update the pattern selection based on key pressed.
+
+Execute the corresponding pattern function.
+
+Default state clears PORTB.
+
+KEYPAD LOGIC OVERVIEW
+
+Switch1 sets flag to 1 ? Pattern 1
+Switch2 sets flag to 2 ? Pattern 2
+Switch3 sets flag to 3 ? Pattern 3
+Switch4 sets flag to 4 ? Pattern 4
+Any other condition keeps the previous pattern running.
+
+APPLICATIONS
+
+LED animations using microcontroller
+
+Interactive pattern generators
+
+Keypad-controlled display systems
+
+Educational embedded system experiments
+
+CONCLUSION
+
+This project demonstrates the use of keypad-driven control logic to manage multiple LED patterns efficiently.
+The modular design ensures easy expansion and modification of LED patterns.
+Using separate pattern functions and clean keypad input handling makes the system stable and user-friendly.
